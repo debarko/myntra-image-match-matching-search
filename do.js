@@ -307,14 +307,18 @@ function getProducts(color, type) {
 			var json =
 			{
 				'url': "http://myntra.com/"+prods[i]["dre_landing_page_url"],
-				'name': prods[i]["product"]
+				'name': prods[i]["product"],
+				'image': prods[i]["search_image"],
+				'description': prods[i]["global_attr_article_type"]+' from '+prods[i]["global_attr_brand"]
 			};
 			final_json_dump.push(json);
 		}
 		count++;
 		if (count === color_match[internal_color_of_image].length) {
+			count = 0;
 			if (server_side_response !== 0) {
-				server_side_response.send(JSON.stringify(final_json_dump));
+				server_side_response.end(JSON.stringify(final_json_dump));
+				server_side_response = 0;
 			} else {
 				console.log(final_json_dump);
 			}
@@ -331,7 +335,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
-	res.end('Hey');
+	fs.readFile("index.html", "utf8", function(err, data){
+		if(err) throw err;
+
+	    res.send(data);
+	});
 })
 
 app.post('/give-me-sugar',function(request,response){

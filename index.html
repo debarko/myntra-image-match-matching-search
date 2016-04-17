@@ -1,0 +1,190 @@
+<html>
+<head>
+	<title>Find me Pair</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
+	<script type="text/javascript">
+		function fetchProds() {
+			$("#queryImg").attr("src", $('#url').val());
+			$("#queryImg").attr("height", '300px');
+			$("#queryImg").attr("width", '200px');
+			$("body").addClass("loading");
+			var url = $('#url').val();
+			$.ajax({
+				url: '/give-me-sugar',
+				type: 'POST',
+				data: { url: url },
+				success: handleProds
+			});
+		}
+
+		function handleProds(response) {
+			response = JSON.parse(response);
+			console.log(response);
+			var htmlString = '<div class="item"><img src="image_" class="image"><a class="overlay" target="wooly" href="url_"><h3 class="title">title_</h3><div class="description"><p>description_</p></div></a></div>'
+			response.forEach(function (val) {
+				var tempHTML = htmlString;
+
+				tempHTML = tempHTML.replace('url_', val.url);
+				tempHTML = tempHTML.replace('title_', val.name);
+				tempHTML = tempHTML.replace('image_', val.image);
+				tempHTML = tempHTML.replace('description_', val.description);
+				$("#container").append(tempHTML);
+			})
+			$("body").removeClass("loading");
+		}
+		$(window).load( function() {
+		    $('#container').masonry({
+		        "itemSelector": ".item",
+		        "columnWidth": ".grid-sizer",
+		    });
+
+		});
+	</script>
+	<style type="text/css">
+		.center-align {
+			margin: 0 auto;
+			text-align:center;
+		}
+		img {
+			max-height: 300px;
+			max-width: 200px;
+		}
+		.style-2{
+		  padding: 10px;
+		  border: solid 5px #6496c8;
+		  transition: border 0.3s;
+		}
+		.style-2:focus,
+		.style-2.focus {
+		  border: solid 5px #346392;
+		}
+		.border {
+		  color: #6496c8;
+		  background: rgba(0,0,0,0);
+		  border: solid 5px #6496c8;
+		}
+		.border:hover,
+		.border.hover {
+		  border-color: #346392;
+		  color: #346392;
+		}
+		.border:active,
+		.border.active {
+		  border-color: #27496d;
+		  color: #27496d;
+		}
+		.grid-sizer { width: 20%; }
+		#container {
+			width: 600px;
+		}
+		.item {
+			max-width: 20%;
+			float: left;
+    		position: relative;
+    		margin: 0 auto;
+		}
+
+		@media screen and (max-width: 1224px) {
+		  .grid-sizer { width: 33.33%; }
+		  .item { max-width: 33.33%; }
+		}
+
+		@media screen and (max-width: 720px) {
+		  .grid-sizer { width: 50%; }
+		  .item { max-width: 50%; }
+		}
+
+		@media screen and (max-width: 480px) {
+		  .grid-sizer { width: 100%; }
+		  .item { max-width: 100%; }
+		}
+		.overlay {
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0,0,0,0.5);
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    text-decoration: none;
+		    color: #fff;
+		    display: none;
+		}
+
+		.overlay .title {
+		    text-align: center;
+		    font-size: 25px;
+    		padding: 0px 10px;
+		}
+
+		.overlay .description {
+		    position: absolute;
+		    bottom: 0;
+		    left: 0;
+		    background-color: rgba(0,0,0,0.80);
+		    width: 100%;
+		    margin: 0;
+		}
+
+		.overlay .description p {
+		    margin: 20px;
+		}
+
+		.item:hover .overlay {
+		    display: block;
+		}
+		.queryImg {
+			margin: 20px;
+		}
+		/* Start by setting display:none to make this hidden.
+	   Then we position it in relation to the viewport window
+	   with position:fixed. Width, height, top and left speak
+	   for themselves. Background we set to 80% white with
+	   our animation centered, and no-repeating */
+	   .modal {
+	   	display:    none;
+	   	position:   fixed;
+	   	z-index:    1000;
+	   	top:        0;
+	   	left:       0;
+	   	height:     100%;
+	   	width:      100%;
+	   	background: rgba( 255, 255, 255, .8 ) 
+	   	url('http://i.stack.imgur.com/FhHRx.gif') 
+	   	50% 50% 
+	   	no-repeat;
+	   }
+
+		/* When the body has the loading class, we turn
+		the scrollbar off with overflow:hidden */
+		body.loading {
+			overflow: hidden;   
+		}
+
+		/* Anytime the body has the loading class, our
+		modal element will be visible */
+		body.loading .modal {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<section class="center-align">
+		<input class="style-2" placeholder="Enter the URL of the Image" size=100 type="text" id="url" /><br />
+		<br />
+		<button class="border" onclick="javascript:fetchProds()">Match 'em</button>
+	</section>
+	<center>
+		<img class="queryImg" id="queryImg" src="" width="0px" height="0px" />
+	</center>
+	<center>
+	<div id="container">
+			<!-- This will make sure our size stays right when using Masonry -->
+			<div class="grid-sizer"></div>
+
+			
+	</div>
+	</center>
+	<div class="modal"><!-- Place at bottom of page --></div>
+</body>
+</html>
