@@ -319,6 +319,7 @@ function getProducts(color, type) {
 			if (server_side_response !== 0) {
 				server_side_response.end(JSON.stringify(final_json_dump));
 				server_side_response = 0;
+				final_json_dump = [];
 			} else {
 				console.log(final_json_dump);
 			}

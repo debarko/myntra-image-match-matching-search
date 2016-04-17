@@ -5,6 +5,7 @@
 	<script src="https://npmcdn.com/masonry-layout@4.0/dist/masonry.pkgd.min.js"></script>
 	<script type="text/javascript">
 		function fetchProds() {
+			$("#container").contents().remove();
 			$("#queryImg").attr("src", $('#url').val());
 			$("#queryImg").attr("height", '300px');
 			$("#queryImg").attr("width", '200px');
